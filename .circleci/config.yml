@@ -6,26 +6,44 @@ commands:
       - run: echo ${CIRCLE_WORKFLOW_ID}
 
 jobs:
-  my_job:
+  build:
     docker:
       - image: cimg/node:13.8.0
     steps:
-      - print_pipeline_id
-  
-  error_job:
+      - checkout
+      - run: npm install
+      - save_cache:
+          keys: "npm-packages"
+          paths:
+            - /src/node_modules
+      - run: npm run lint
+  test:
+    docker:
+      - image: cimg/node:13.8.0  
+    steps:
+      - checkout
+      - restore_cache:
+          keys: "npm-packages"
+      - run: npm test
+    
+  analyze:
     docker:
       - image: cimg/node:13.8.0
     steps:
-        - run: exit 1
-        - run:
-            name: on error
-            command: echo "Hello Error!"
-            when: on_fail
-        
+      - checkout
+      - restore_cache:
+          keys: "npm-packages"        
 
 workflows:
   my_workflow:
     jobs:
-      - my_job
-      - error_job
+      - build
+      - test:
+          requires:
+            - build
+      - analyze:
+          requires:
+            - test
+
+
     

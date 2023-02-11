@@ -8,17 +8,20 @@ jobs:
       - checkout
       - run: npm install
       # - save_cache:
-      #     keys: "npm-packages"
+      #     key: my-cache
       #     paths:
-      #       - /src/node_modules
+      - save_cache:
+          key: npm-packages
+          paths:
+            - /src/node_modules
       - run: npm run lint
   test:
     docker:
       - image: cimg/node:13.8.0  
     steps:
       - checkout
-      # - restore_cache:
-      #     keys: "npm-packages"
+      - restore_cache:
+          key: "npm-packages"
       - run: npm test
     
   analyze:
@@ -26,8 +29,8 @@ jobs:
       - image: cimg/node:13.8.0
     steps:
       - checkout
-      # - restore_cache:
-      #     keys: "npm-packages"        
+      - restore_cache:
+          key: "npm-packages"        
 
 workflows:
   my_workflow:

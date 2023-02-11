@@ -28,6 +28,7 @@ jobs:
       - checkout
       - restore_cache:
           key: "npm-packages"        
+      - run: npm audit
 
 workflows:
   my_workflow:

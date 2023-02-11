@@ -7,11 +7,8 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      # - save_cache:
-      #     key: my-cache
-      #     paths:
       - save_cache:
-          key: npm-packages
+          key: "npm-packages"
           paths:
             - /src/node_modules
       - run: npm run lint
